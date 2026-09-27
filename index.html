@@ -787,6 +787,7 @@
       const installButton = document.getElementById("installBtn");
       let installPrompt = null;
       const isIosDevice = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isAndroidDevice = /android/i.test(navigator.userAgent);
       const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
 
       window.addEventListener("beforeinstallprompt", (event) => {
@@ -803,7 +804,7 @@
         showToast("Tagihan Harian berhasil dipasang di perangkat.");
       });
 
-      if (isIosDevice && !isStandalone) {
+      if ((isIosDevice || isAndroidDevice) && !isStandalone) {
         installButton.classList.remove("hidden");
         installButton.classList.add("inline-flex");
       }
