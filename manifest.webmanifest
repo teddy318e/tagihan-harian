@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "Tagihan Harian",
+  "short_name": "Tagihan",
+  "description": "Catatan kunjungan toko, barang titipan, dan tagihan harian.",
+  "lang": "id",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f5f8f5",
+  "theme_color": "#173b36",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

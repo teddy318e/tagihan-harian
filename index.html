@@ -4,7 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#173b36">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Tagihan Harian">
   <title>Tagihan Harian</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -75,14 +81,18 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
+        <button id="installBtn" class="hidden min-h-10 items-center gap-2 rounded-md border border-white/25 bg-[#e4bd67] px-3 text-xs font-bold text-[#173b36] transition hover:bg-[#f0cf83] sm:px-4 sm:text-sm" type="button" title="Pasang Tagihan Harian di HP">
+          <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 8v8m-3-3 3 3 3-3"/></svg>
+          <span class="hidden sm:inline">Pasang aplikasi</span><span class="sm:hidden">Pasang</span>
+        </button>
         <input id="importFile" class="hidden" type="file" accept=".csv,text/csv">
         <button id="importBtn" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-white/25 bg-white/10 px-3 text-xs font-bold text-white transition hover:bg-white/20 sm:px-4 sm:text-sm" type="button" title="Impor data dari file CSV">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m17 8-5-5-5 5M12 3v12"/></svg>
-          <span>Impor CSV</span>
+          <span class="hidden sm:inline">Impor CSV</span>
         </button>
         <button id="exportBtn" class="inline-flex min-h-10 items-center gap-2 rounded-md border border-white/25 bg-white/10 px-3 text-xs font-bold text-white transition hover:bg-white/20 sm:px-4 sm:text-sm" type="button" title="Unduh rekap CSV">
           <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5M12 15V3"/></svg>
-          <span>Ekspor CSV</span>
+          <span class="hidden sm:inline">Ekspor CSV</span>
         </button>
       </div>
     </div>
@@ -773,6 +783,52 @@
         setTimeout(() => URL.revokeObjectURL(url), 1000);
         showToast("File CSV berhasil diunduh.");
       });
+
+      const installButton = document.getElementById("installBtn");
+      let installPrompt = null;
+      const isIosDevice = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+
+      window.addEventListener("beforeinstallprompt", (event) => {
+        event.preventDefault();
+        installPrompt = event;
+        installButton.classList.remove("hidden");
+        installButton.classList.add("inline-flex");
+      });
+
+      window.addEventListener("appinstalled", () => {
+        installPrompt = null;
+        installButton.classList.add("hidden");
+        installButton.classList.remove("inline-flex");
+        showToast("Tagihan Harian berhasil dipasang di perangkat.");
+      });
+
+      if (isIosDevice && !isStandalone) {
+        installButton.classList.remove("hidden");
+        installButton.classList.add("inline-flex");
+      }
+
+      installButton.addEventListener("click", async () => {
+        if (installPrompt) {
+          installPrompt.prompt();
+          await installPrompt.userChoice;
+          installPrompt = null;
+          installButton.classList.add("hidden");
+          installButton.classList.remove("inline-flex");
+        } else if (isIosDevice) {
+          showToast("Di Safari, ketuk Bagikan lalu pilih Tambahkan ke Layar Utama.");
+        } else {
+          showToast("Buka menu browser, lalu pilih Instal aplikasi atau Tambahkan ke layar utama.");
+        }
+      });
+
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch((error) => {
+            console.warn("Service worker tidak dapat dipasang:", error);
+          });
+        });
+      }
 
       render();
     })();
