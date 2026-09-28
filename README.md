@@ -12,7 +12,7 @@ Aplikasi pencatatan kunjungan toko dalam satu file HTML. Tidak memerlukan proses
 
 ## Pasang di HP
 
-Buka alamat GitHub Pages di browser HP. Di Android, ketuk **Pasang aplikasi** di halaman atau pilih **Instal aplikasi** dari menu Chrome. Di iPhone, buka dengan Safari, ketuk **Bagikan**, lalu **Tambahkan ke Layar Utama**. Setelah aplikasi dibuka pertama kali dengan internet, halaman dan aset tampilan yang sudah termuat dapat digunakan offline; GPS, pencarian alamat, dan pemuatan aset CDN terbaru memerlukan internet.
+Buka alamat GitHub Pages di browser HP "https://teddy318e.github.io/tagihan-harian/". Di Android, ketuk **Pasang aplikasi** di halaman atau pilih **Instal aplikasi** dari menu Chrome. Di iPhone, buka dengan Safari, ketuk **Bagikan**, lalu **Tambahkan ke Layar Utama**. Setelah aplikasi dibuka pertama kali dengan internet, halaman dan aset tampilan yang sudah termuat dapat digunakan offline; GPS, pencarian alamat, dan pemuatan aset CDN terbaru memerlukan internet.
 
 ## Penyimpanan dan privasi
 
